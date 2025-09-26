@@ -21,22 +21,38 @@ db.connect((err) => {
   }
 });
 
-// Route for /
+// Route to check DB connection
 app.get("/", (req, res) => {
-  res.send("Hello from Node.js!");
+  db.query("SELECT 1", (err) => {
+    if (err) {
+      res.send("❌ DB connection failed: " + err.message);
+    } else {
+      res.send("✅ DB connected successfully!");
+    }
+  });
 });
 
-// Example: Fetch users
-app.get("/users", (req, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
+// Route to create users table
+app.get("/create-table", (req, res) => {
+  const sql = `
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(100) NOT NULL,
+      email VARCHAR(100) NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+  db.query(sql, (err) => {
     if (err) {
-      return res.status(500).send("DB query error: " + err);
+      res.send("❌ Table creation failed: " + err.message);
+    } else {
+      res.send("✅ Users table created successfully!");
     }
-    res.json(results);
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
