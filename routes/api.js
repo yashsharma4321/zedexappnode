@@ -8,13 +8,13 @@ const router = express.Router();
 // --------------------
 // DB Sync
 // --------------------
-sequelize.authenticate()
-  .then(() => console.log("✅ DB connected!"))
-  .catch(err => console.error("❌ DB connection failed:", err));
+// sequelize.authenticate()
+//   .then(() => console.log("✅ DB connected!"))
+//   .catch(err => console.error("❌ DB connection failed:", err));
 
-sequelize.sync()
-  .then(() => console.log("✅ Tables synced!"))
-  .catch(err => console.error("❌ Sync error:", err));
+// sequelize.sync()
+//   .then(() => console.log("✅ Tables synced!"))
+//   .catch(err => console.error("❌ Sync error:", err));
 
 // --------------------
 // Routes
