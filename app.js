@@ -1,18 +1,19 @@
-import express from "express";
-import router from "./routes/api.js"; // Make sure the path is correct
+import express from 'express';
+import router from './routes/api.js';
 
-const PORT = 3000;
 const app = express();
+const PORT = 3000;
 
-// Root route
-app.get('/', (req, res) => {
-    res.send('Welcome to the API!');
-});
+// Set EJS as the template engine
+app.set('view engine', 'ejs');
+app.set('views', './views'); // your EJS files folder
 
-// Use the router for API routes
-app.use('/api', router);
+// Serve static files like CSS/JS from 'public'
+app.use(express.static('public'));
 
-// Start the server
+// Use your router
+app.use('/', router);
+
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
