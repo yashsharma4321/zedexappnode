@@ -1,12 +1,24 @@
 import express from "express";
-import { router } from "./routes/api.js";
+import sequelize from "./models/db.js";  // 👈 path adjust karo
 
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
-app.use("/", router);
+// test DB connection before server start
+sequelize.authenticate()
+  .then(() => {
+    console.log("✅ DB connected successfully");
 
-// app.listen(PORT, () => {
-//   console.log(`🚀 Server running on http://localhost:${PORT}`);
-// });
+    app.use(express.json());
+
+    app.get("/hello", (req, res) => {
+      res.send("hello");
+    });
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ DB connection failed:", err.message);
+  });
