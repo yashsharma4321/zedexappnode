@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import db from './db.js';   // ✅ import db
+import sequelize from './models/db.js';   // ✅ import sequelize
+import User from './models/users.js';     // ✅ import model
 import router from './routes/api.js';
 
 dotenv.config();
@@ -8,33 +9,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Set EJS as the template engine
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
-// Serve static files
 app.use(express.static('public'));
 
-// ✅ Make DB accessible in routes
-app.use((req, res, next) => {
-  req.db = db;
-  next();
-});
-
 // ✅ Test route
-app.get('/connected', (req, res) => {
-  db.query('SELECT NOW() AS now', (err, results) => {
-    if (err) {
-      console.error('❌ Query error:', err.message);
-      return res.status(500).send('❌ Database query failed: ' + err.message);
-    }
-    res.send('✅ Database connected! Current time: ' + results[0].now);
-  });
+app.get('/connected', async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.send('✅ Database connected!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('❌ DB connection failed: ' + err.message);
+  }
 });
 
-// Use routes
+// Use API routes
 app.use('/', router);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
