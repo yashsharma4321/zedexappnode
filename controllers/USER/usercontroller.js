@@ -1,4 +1,4 @@
-import User from '../../models/users.js'; // Adjust relative path if needed
+// import User from '../../models/users.js'; // Adjust relative path if needed
 
 // Fetch all users
 export const getAllUsers = async (req, res) => {
