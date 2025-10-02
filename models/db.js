@@ -1,18 +1,24 @@
-import mysql from 'mysql2/promise'; // promise based, async/await ke liye
+import mysql from 'mysql2';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// MySQL connection pool create
-const pool = mysql.createPool({
+// MySQL connection create
+const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD, // .env me DB_PASSWORD likhna
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,  // max 10 simultaneous connections
-  queueLimit: 0
+  port: process.env.DB_PORT || 3306
 });
 
-export default pool;
+// Connect to DB
+db.connect((err) => {
+  if (err) {
+    console.error("❌ Database connection failed:", err.message);
+  } else {
+    console.log("✅ Database connected successfully");
+  }
+});
+
+export default db;
