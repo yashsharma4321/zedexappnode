@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import db from './models/db.js';   // ✅ Sequelize instance import karo
+import db from './models/db.js';   // ✅ simple MySQL connection import
 
 import router from './routes/api.js';
 
@@ -17,15 +17,15 @@ app.set('views', './views');
 app.use(express.static('public'));
 
 // ✅ Test DB connection route
-// app.get('/connected', async (req, res) => {
-//   try {
-//     await sequelize.authenticate(); // Sequelize ke authenticate method se test
-//     res.send('✅ Database connected successfully!');
-//   } catch (err) {
-//     console.error('❌ Database connection failed:', err.message);
-//     res.status(500).send('❌ Database connection failed: ' + err.message);
-//   }
-// });
+app.get('/connected', (req, res) => {
+  db.query('SELECT NOW() AS now', (err, results) => {
+    if (err) {
+      console.error('❌ Database query failed:', err.message);
+      return res.status(500).send('❌ Database query failed: ' + err.message);
+    }
+    res.send('✅ Database connected! Current time: ' + results[0].now);
+  });
+});
 
 // Use routes
 app.use('/', router);
