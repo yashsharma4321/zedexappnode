@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-// import sequelize from './models/db.js';   // ✅ Sequelize instance import karo
+import db from './models/db.js';   // ✅ Sequelize instance import karo
+
 import router from './routes/api.js';
 
 dotenv.config();
